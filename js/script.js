@@ -76,3 +76,47 @@ function ascendingSort(data, total){
           return 0;
     });
 }
+
+$("#filter").on('input', function(){
+    if($("#filter").val().length > 2){
+        searchAll();
+    }else{
+        showAll();
+    }
+});
+
+function searchAll() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("filter");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tbl-countries");
+    var rows = table.getElementsByTagName("tr");
+    for (i = 0; i < rows.length; i++) {
+      var cells = rows[i].getElementsByTagName("td");
+      var j;
+      var rowContainsFilter = false;
+      for (j = 0; j < cells.length; j++) {
+        if (cells[j]) {
+          if (cells[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+            rowContainsFilter = true;
+            continue;
+          }
+        }
+      }
+  
+      if (! rowContainsFilter) {
+        rows[i].style.display = "none";
+      } else {
+        rows[i].style.display = "";
+      }
+    }
+  }
+
+  function showAll() {
+    var table, i;
+    table = document.getElementById("tbl-countries");
+    var rows = table.getElementsByTagName("tr");
+    for (i = 0; i < rows.length; i++) {
+        rows[i].style.display = "";
+    }
+  }
