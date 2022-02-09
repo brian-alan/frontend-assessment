@@ -3,8 +3,10 @@ $( document ).ready(function() {
         url: "https://restcountries.com/v3.1/all",
         dataType:"json",
         success: function(data){
-            console.log(data);
             $.each(data, function( index, value ) {
+                ascendingSort(value, index);
+            });
+            $.each(array, function(index, value){
                 let capital;
                 if(value.capital == undefined){
                     capital = "No capital to display";
@@ -33,7 +35,11 @@ $( document ).ready(function() {
     });
 
     let $sR = $(".form-select");
-    $.each($(".heading"), function(){
+    $.each($(".heading"), function(index){
+        if(index == 0){
+            $sR.append($("<option></option>").attr({"value":0}).text("--Select filerting option--"));
+        }
+        
         $sR.append($("<option></option>").attr({
             "value": $(this).text()
         }).text($(this).text()));
@@ -55,3 +61,18 @@ $("tbody").on("click", "tr", function(){
     });
     
 });
+
+var array = [];
+function ascendingSort(data, total){
+    array.push(data);
+    array.sort(function (a, b){
+        if (a.name.official > b.name.official) {
+            return 1;
+          }
+          if (a.name.official < b.name.official) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+    });
+}
