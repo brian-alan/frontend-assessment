@@ -35,6 +35,8 @@ $( document ).ready(function() {
         }
     });
 
+    $("#noDataRow").hide();
+
     let $sR = $(".form-select");
     $.each($(".heading"), function(index){
         if(index == 0){
@@ -78,6 +80,7 @@ function ascendingSort(data){
 }
 
 $("#filter").on('input', function(){
+    
     if($("#filter").val().length > 2){
         if($("#col-sel").val() == 0){
             searchAll();
@@ -88,6 +91,7 @@ $("#filter").on('input', function(){
     }else{
         showAll();
     }
+    
 });
 
 function searchBy(column){
@@ -132,6 +136,12 @@ function searchBy(column){
         } else {
             rows[i].style.display = "";
         }
+
+        if(allHidden()){
+            $("#noDataRow").show();
+        }else{
+            $("#noDataRow").hide();
+        }
     }
 }
 
@@ -159,6 +169,11 @@ function searchAll() {
             rows[i].style.display = "";
         }
     }
+    if(allHidden()){
+        $("#noDataRow").show();
+    }else{
+        $("#noDataRow").hide();
+    }
 }
 
 function showAll() {
@@ -168,4 +183,18 @@ function showAll() {
     for (i = 0; i < rows.length; i++) {
         rows[i].style.display = "";
     }
+    $("#noDataRow").hide();
+    
+}
+
+function allHidden(){
+    var table, i;
+    table = document.getElementById("tbl-countries");
+    var rows = table.getElementsByTagName("tr");
+    for (i = 1; i < rows.length; i++) {
+        if(rows[i].style.display == ""){
+            return false;
+        }
+    }
+    return true;
 }
