@@ -1,10 +1,11 @@
 $( document ).ready(function() {
+    //Initial Ajax to retrieve all data
     $.ajax({
         url: "https://restcountries.com/v3.1/all",
         dataType:"json",
         success: function(data){
             $.each(data, function( index, value ) {
-                ascendingSort(value, index);
+                ascendingSort(value);
             });
             $.each(array, function(index, value){
                 let capital;
@@ -63,7 +64,7 @@ $("tbody").on("click", "tr", function(){
 });
 
 var array = [];
-function ascendingSort(data, total){
+function ascendingSort(data){
     array.push(data);
     array.sort(function (a, b){
         if (a.name.official > b.name.official) {
@@ -72,51 +73,99 @@ function ascendingSort(data, total){
           if (a.name.official < b.name.official) {
             return -1;
           }
-          // a must be equal to b
           return 0;
     });
 }
 
 $("#filter").on('input', function(){
     if($("#filter").val().length > 2){
-        searchAll();
+        if($("#col-sel").val() == 0){
+            searchAll();
+        }else{
+            searchBy($("#col-sel").val());
+        }
+        
     }else{
         showAll();
     }
 });
 
-function searchAll() {
-    var input, filter, table, tr, td, i;
+function searchBy(column){
+    let option;
+    switch (column){
+        case "Oficial Name":
+            option = 0;
+            break;
+        case "Capital":
+            option = 1;
+            break;
+        case "Region":
+            option = 2;
+            break;
+        case "Language":
+            option = 3;
+            break;
+        case "Population":
+            option = 4;
+            break;
+    }
+    var input, filter, table, i;
     input = document.getElementById("filter");
     filter = input.value.toUpperCase();
     table = document.getElementById("tbl-countries");
     var rows = table.getElementsByTagName("tr");
-    for (i = 0; i < rows.length; i++) {
-      var cells = rows[i].getElementsByTagName("td");
-      var j;
-      var rowContainsFilter = false;
-      for (j = 0; j < cells.length; j++) {
-        if (cells[j]) {
-          if (cells[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
-            rowContainsFilter = true;
-            continue;
-          }
+    for (i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        var j;
+        var rowContainsFilter = false;
+        for (j = 0; j < cells.length; j++) {
+            if (cells[option]) {
+                if (cells[option].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    rowContainsFilter = true;
+                    continue;
+                }
+            }
         }
-      }
   
-      if (! rowContainsFilter) {
-        rows[i].style.display = "none";
-      } else {
-        rows[i].style.display = "";
-      }
+        if (! rowContainsFilter) {
+            rows[i].style.display = "none";
+        } else {
+            rows[i].style.display = "";
+        }
     }
-  }
+}
 
-  function showAll() {
+function searchAll() {
+    var input, filter, table, i;
+    input = document.getElementById("filter");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tbl-countries");
+    var rows = table.getElementsByTagName("tr");
+    for (i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        var j;
+        var rowContainsFilter = false;
+        for (j = 0; j < cells.length; j++) {
+            if (cells[j]) {
+                if (cells[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    rowContainsFilter = true;
+                    continue;
+                }
+            }
+        }
+        if (! rowContainsFilter) {
+            rows[i].style.display = "none";
+        } else {
+            rows[i].style.display = "";
+        }
+    }
+}
+
+function showAll() {
     var table, i;
     table = document.getElementById("tbl-countries");
     var rows = table.getElementsByTagName("tr");
     for (i = 0; i < rows.length; i++) {
         rows[i].style.display = "";
     }
-  }
+}
